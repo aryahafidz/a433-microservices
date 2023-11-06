@@ -1,0 +1,25 @@
+# Ini untuk menggunakan version 3.7
+version: "3.7"
+
+services:
+# Untuk mengatur services untuk container item-db
+  item-db:
+    image: mongo:3
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - app-db:/data/db
+
+# Untuk mengatur service yang digunakan container item-app
+  item-app:
+    image: aryahafidz/item-app:v1
+    depends_on:
+      - item-db
+    restart: always
+    ports:
+      - "80:8080"
+
+# Untuk mengatur bridge volume untuk item-db
+volumes:
+  app-db:
