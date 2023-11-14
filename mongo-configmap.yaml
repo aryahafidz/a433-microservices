@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-configmap  
+  namespace: submission
+data:
+  mongo.conf: | # Untuk mengkonfigurasi data sebagai file mongo.conf yang memiliki properti storage dengan key
+    storage:              
+      dbPath: /data/db

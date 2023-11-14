@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs-deployment
+  namespace: submission
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: karsajobs
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+    spec:
+      containers:
+      - name: karsajobs
+        image: aryahafidz/karsajobs:latest  # Mengambil image dari Docker Hub
+        ports:
+        - containerPort: 8080  
+        env:
+        - name: APP_PORT
+          value: "8080" # Untuk menentukan port di 8080
+        - name: MONGO_HOST
+          value: "mongo-service"
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret  # Untuk mengambil dari mongo-secret.yaml
+              key: MONGO_ROOT_USERNAME  # Ini adalah Kunci yang sesuai dengan MONGO_ROOT_USERNAME dalam Secret
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret  # Untuk Mengambil dari mongo-secret.yaml
+              key: MONGO_ROOT_PASSWORD  # Ini adalah kunci yang sesuai dengan MONGO_ROOT_PASSWORD dalam Secret

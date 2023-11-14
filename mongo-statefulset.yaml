@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: # Untuk mendefinisikan metadata untuk StatefulSet, seperti nama dan label
+  name: mongo
+  namespace: submission
+  labels:
+    app: mongo
+spec: # Untuk mendefinisikan konfigurasi StatefulSet
+  selector: # Untuk menentukan Pods yang dipakai berdasarkan label
+    matchLabels:
+      app: mongo
+      tier: backend
+  serviceName: mongo
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: mongo
+        tier: backend
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - image: mongo:4.4
+        name: mongo
+        env: # Untuk menentukan environment variable sesuai ketentuan Submission
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+        ports:
+        - containerPort: 27017 # Ini adalah Port default untuk MongoDB
+          name: mongo
+        volumeMounts: # Untuk menentukan mount paths sesuai ketentuan Submission
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+        - name: mongo-config
+          mountPath: /config
+        - name: mongo-credentials
+          mountPath: /etc/mongo-credentials
+      volumes: # Untuk mendefinisikan volume yang akan digunakan sesuai mount paths
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongo-pv-claim
+      - name: mongo-config
+        configMap:
+          name: mongo-configmap
+      - name: mongo-credentials
+        secret:
+          secretName: mongo-secret
