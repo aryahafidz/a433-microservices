@@ -18,18 +18,3 @@ spec:
         image: aryahafidz/karsajobs-ui:latest # Untuk mengambil image dari Docker Hub
         ports:
         - containerPort: 8000  
-        env:
-        - name: APP_PORT
-          value: "8000" # Untuk menentukan port di 8000
-        - name: MONGO_HOST
-          value: "mongo-service"
-        - name: MONGO_USER
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret  # Untuk mengambil dari mongo-secret.yaml
-              key: MONGO_ROOT_USERNAME  # Ini adalah kunci yang sesuai dengan MONGO_ROOT_USERNAME dalam Secret
-        - name: MONGO_PASS
-          valueFrom:
-            secretKeyRef:
-              name: mongo-secret  # Untuk mengambil dari mongo-secret.yaml
-              key: MONGO_ROOT_PASSWORD  # Ini adalah kunci yang sesuai dengan MONGO_ROOT_PASSWORD dalam Secret
