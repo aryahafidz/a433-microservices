@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Build Docker image
-docker build -t aryahafidz/order-service .
+docker build -t ghcr.io/aryahafidz/order-service:latest .
 
 # Login ke Docker Hub
-docker login --username aryahafidz --password dckr_pat_Dc3PAGNIaa1PujyU-OmVDLrqga8
+echo "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" | docker login ghcr.io -u aryahafidz --password-stdin
 
 # Push image ke Docker Hub
-docker push aryahafidz/order-service
+docker push ghcr.io/aryahafidz/order-service:latest

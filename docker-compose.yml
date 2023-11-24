@@ -1,0 +1,26 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: "rabbitmq_container_order_service"
+    ports:
+      - 3000:3000
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - app_network
+
+  order-service:
+    image: ghcr.io/aryahafidz/order-service:latest
+    depends_on:
+      - "rabbitmq"
+    command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=30 -- node index.js'
+    environment:
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
